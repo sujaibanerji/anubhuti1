@@ -2,7 +2,8 @@ import os.path
 import glob
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import time
+import numpy as np
 # Setting basePath = r"C:\Users\Win-8.1\Desktop\Desktop\golu"
 basePath=os.path.dirname(os.path.realpath(__file__))
 #print ("Hello")
@@ -49,16 +50,36 @@ for filename1 in glob.glob(os.path.join(basePath+"/inputs/", '*.csv')):
     #imageFileName = filename1[:filename1len] + str('_') + str('.') + str('png')
     imageFileName=imageOutputDir+plotHeading+".png"
     hstack2.to_csv(outputFileName, sep =',', encoding ='utf-8', index = False)
-    x = hstack2.loc[:, 'Time [min]']
-    y = hstack2.loc[:, 'Intensity [counts]']
+    x = hstack2.loc[:, 'Time [min]'].astype(float)
+    y = hstack2.loc[:, 'Intensity [counts]'].astype(float)
+
+    print (outputFileName)
+    print (imageFileName)
+    print (type(x))
+    print (x)
+    print (type(y))
+    print (y)
+    mn=x.min()
+    mx=x.max()
+    print (type(mn))
+    print (type(mx))
+
+    divs=10
+    diff=(mx-mn)/divs
+    floatTicks=np.linspace(mn,mx,divs+1)
+    ticks = [round(x) for x in floatTicks]
+
     plt.title(plotHeading)
-    figure1 = plt.plot(x, y, '-b', linewidth = 1)
-    ticks = [1000, 2000, 3000, 4000, 5000]
+
+    figure1=plt.figure()
+    plt.plot(x, y, '-b', linewidth = 1)
+    #ticks = [3, 11, 19, 27, 35]
     plt.xlabel('Time (min)')
     plt.ylabel('Total ion counts')
-    plt.xticks(ticks)
+    plt.xticks(ticks,rotation='horizontal')
 #    figure_path = r"C:\Users\Win-8.1\Desktop\Desktop\golu\golu"
-    plt.savefig(imageFileName)
+    figure1.savefig(imageFileName)
+
 #    plt.ioff()
 #   plt.show()
 
