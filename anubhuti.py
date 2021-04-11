@@ -4,11 +4,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Setting basePath = r"C:\Users\Win-8.1\Desktop\Desktop\golu"
-basePath=os.path.dirname(__file__)
+basePath=os.path.dirname(os.path.realpath(__file__))
+#print ("Hello")
+print (basePath)
 
 # print (basePath)
 # exit(0)
 plt.ioff()
+outputDir=basePath+"/outputs/"
+if not os.path.exists(outputDir):
+    os.makedirs(outputDir)
+
+imageOutputDir=basePath+"/figures/"
+if not os.path.exists(imageOutputDir):
+    os.makedirs(imageOutputDir)
+
 for filename1 in glob.glob(os.path.join(basePath+"/inputs/", '*.csv')):
     df1 = pd.read_csv(filename1)
     emptyrow1 = df1[df1.isnull().all(axis = 1)].index[0]
@@ -32,12 +42,12 @@ for filename1 in glob.glob(os.path.join(basePath+"/inputs/", '*.csv')):
     hstack2 = hstack1.iloc[1:]
     filename1len = len(filename1) - 4
     filename=os.path.basename(filename1)
-    outputFileName = basePath + "/outputs/" + filename
+    outputFileName = outputDir + filename
     #plotHeading = filename1[:filename1len] + str('_')
     plotHeading=os.path.splitext(filename)[0]
     print (plotHeading)
     #imageFileName = filename1[:filename1len] + str('_') + str('.') + str('png')
-    imageFileName=basePath+"/figures/"+plotHeading+".png"
+    imageFileName=imageOutputDir+plotHeading+".png"
     hstack2.to_csv(outputFileName, sep =',', encoding ='utf-8', index = False)
     x = hstack2.loc[:, 'Time [min]']
     y = hstack2.loc[:, 'Intensity [counts]']
